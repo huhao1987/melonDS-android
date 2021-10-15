@@ -53,12 +53,12 @@
     <string name="action_sort_recently_played">Recently played</string>
 
     <string name="ds_bios_dir_not_set">DS BIOS directory not set</string>
-    <string name="ds_bios_dir_not_set_info">DS BIOS directory is not set. Select the directory that contains the following files:\n&#8226; bios7.bin\n&#8226; bios9.bin\n&#8226; firmware.bin</string>
+    <string name="ds_bios_dir_not_set_info">DS BIOS directory is not set. Select the directory that contains the following files: &#8226; bios7.bin &#8226; bios9.bin &#8226; firmware.bin</string>
     <string name="dsi_bios_dir_not_set">DSi BIOS directory not set</string>
-    <string name="dsi_bios_dir_not_set_info">DSi BIOS directory is not set. Select the directory that contains the following files:\n&#8226; bios7.bin\n&#8226; bios9.bin\n&#8226; firmware.bin\n&#8226; nand.bin</string>
+    <string name="dsi_bios_dir_not_set_info">DSi BIOS directory is not set. Select the directory that contains the following files: &#8226; bios7.bin &#8226; bios9.bin &#8226; firmware.bin &#8226; nand.bin</string>
     <string name="incorrect_bios_dir">Incorrect BIOS directory</string>
-    <string name="ds_incorrect_bios_dir_info">The BIOS directory for the DS system is not correct. Make sure that the selected directory contains the following files:\n&#8226; bios7.bin\n&#8226; bios9.bin\n&#8226; firmware.bin</string>
-    <string name="dsi_incorrect_bios_dir_info">The BIOS directory for the DSi system is not correct. Make sure that the selected directory that contains the following files:\n&#8226; bios7.bin\n&#8226; bios9.bin\n&#8226; firmware.bin\n&#8226; nand.bin</string>
+    <string name="ds_incorrect_bios_dir_info">The BIOS directory for the DS system is not correct. Make sure that the selected directory contains the following files: &#8226; bios7.bin &#8226; bios9.bin &#8226; firmware.bin</string>
+    <string name="dsi_incorrect_bios_dir_info">The BIOS directory for the DSi system is not correct. Make sure that the selected directory that contains the following files: &#8226; bios7.bin &#8226; bios9.bin &#8226; firmware.bin &#8226; nand.bin</string>
     <string name="storage_permission_required">Storage permission required</string>
     <string name="storage_permission_required_info">Storage permission is required to load ROMs from your device. Please grant access to storage on the next dialog.</string>
     <string name="microphone_permission_required">Audio recording permission required</string>
@@ -102,13 +102,12 @@
     <string name="internal_firmware_settings">Internal firmware settings</string>
     <string name="internal_firmware_settings_summary">Adjust the settings of the internal firmware.</string>
     <string name="custom_bios_firmware">Custom BIOS and firmware</string>
-    <string name="custom_bios_firmware_description">Using a custom BIOS and firmware allows you to launch and navigate in the DS\'s firmware without loading a ROM, just like in a real system.\n\nYou will need to dump the BIOS and firmware files from a real system.\n\nUsing a custom BIOS and firmware is required for DSi support.</string>
+    <string name="custom_bios_firmware_description">Using a custom BIOS and firmware allows you to launch and navigate in the DS\'s firmware without loading a ROM, just like in a real system.  You will need to dump the BIOS and firmware files from a real system.  Using a custom BIOS and firmware is required for DSi support.</string>
     <string name="bios_directory">DS BIOS directory</string>
     <string name="dsi_bios_directory">DSi BIOS directory</string>
     <string name="show_boot_screen">Show boot screen</string>
     <string name="mac_address">MAC address</string>
     <string name="randomize_mac_address">Randomize MAC address</string>
-    <string name="randomize_mac_address_summary">When enabled, a random MAC address is used at every boot. This may cause some games to think its running on a different system and can break time based events.</string>
     <string name="generate_new_mac_address">Generate new</string>
     <string name="generate_new_mac_address_description">Generating a new MAC address will make games think they are running on a different system.</string>
     <string name="enable_jit">Enable JIT</string>
@@ -142,6 +141,7 @@
     <string name="vibration_strength">Vibration strength</string>
     <string name="soft_input_opacity">Soft input opacity</string>
     <string name="cheats">Cheats</string>
+    <string name="usrcheats">usrcheat.dat</string>
     <string name="cheats_summary">Enable &amp; import cheat codes</string>
     <string name="enable_cheats">Enable cheats</string>
     <string name="cheats_database">Cheats database (XML format)</string>
@@ -338,4 +338,5 @@
         <item>Fit left</item>
         <item>Fit right</item>
     </string-array>
+    <string name="randomize_mac_address_summary">When enabled, a random MAC address is used at every boot. This may cause some games to think its running on a different system and can break time based events.</string>
 </resources>
