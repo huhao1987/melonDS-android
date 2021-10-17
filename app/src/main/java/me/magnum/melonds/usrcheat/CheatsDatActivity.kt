@@ -3,6 +3,7 @@ package me.magnum.melonds.usrcheat
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
@@ -52,6 +53,16 @@ class CheatsDatActivity : AppCompatActivity() {
         loading = findViewById<RelativeLayout>(R.id.loadingarea)
         loading?.visibility = View.VISIBLE
         initcheatdata(intent)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onNewIntent(newintent: Intent?) {
