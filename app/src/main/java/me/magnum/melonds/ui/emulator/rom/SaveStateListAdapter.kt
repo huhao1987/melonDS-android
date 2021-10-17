@@ -1,6 +1,5 @@
 package me.magnum.melonds.ui.emulator.rom
 
-import android.content.Context
 import android.database.DataSetObserver
 import android.view.LayoutInflater
 import android.view.View
@@ -62,9 +61,8 @@ class SaveStateListAdapter(
             return null
         }
 
-        val context = parent.context
         val view = if (convertView == null) {
-            ItemSaveStateSlotBinding.inflate(LayoutInflater.from(context), parent, false)
+            ItemSaveStateSlotBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         } else {
             ItemSaveStateSlotBinding.bind(convertView)
         }
@@ -88,13 +86,13 @@ class SaveStateListAdapter(
         if (item.exists) {
             view.textDate.isGone = false
             view.textTime.isGone = false
-            view.textSlot.text = context.getString(R.string.save_state_slot, getSaveSateSlotName(context, item))
+            view.textSlot.text = parent.context.getString(R.string.save_state_slot, item.slot)
             view.textDate.text = dateFormat.format(item.lastUsedDate!!)
             view.textTime.text = timeFormat.format(item.lastUsedDate)
         } else {
             view.textDate.isGone = true
             view.textTime.isGone = true
-            view.textSlot.text = context.getString(R.string.empty_slot, getSaveSateSlotName(context, item))
+            view.textSlot.text = parent.context.getString(R.string.empty_slot, item.slot)
         }
 
         view.root.setOnClickListener {
@@ -127,13 +125,5 @@ class SaveStateListAdapter(
 
     override fun isEnabled(position: Int): Boolean {
         return true
-    }
-
-    private fun getSaveSateSlotName(context: Context, slot: SaveStateSlot): String {
-        return if (slot.slot == SaveStateSlot.QUICK_SAVE_SLOT) {
-            context.getString(R.string.quick_slot)
-        } else {
-            slot.slot.toString()
-        }
     }
 }

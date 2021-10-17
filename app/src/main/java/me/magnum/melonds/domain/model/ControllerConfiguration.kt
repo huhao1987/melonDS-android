@@ -21,9 +21,7 @@ class ControllerConfiguration(configList: List<InputConfig>) {
                 Input.PAUSE,
                 Input.FAST_FORWARD,
                 Input.RESET,
-                Input.SWAP_SCREENS,
-                Input.QUICK_SAVE,
-                Input.QUICK_LOAD
+                Input.SWAP_SCREENS
         )
 
         fun empty(): ControllerConfiguration {

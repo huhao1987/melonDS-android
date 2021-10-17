@@ -11,8 +11,6 @@ abstract class FrontendInputHandler : IInputListener {
             Input.TOGGLE_SOFT_INPUT -> onSoftInputTogglePressed()
             Input.RESET -> onResetPressed()
             Input.SWAP_SCREENS -> onSwapScreens()
-            Input.QUICK_SAVE -> onQuickSave()
-            Input.QUICK_LOAD -> onQuickLoad()
         }
     }
 
@@ -27,6 +25,4 @@ abstract class FrontendInputHandler : IInputListener {
     abstract fun onSoftInputTogglePressed()
     abstract fun onResetPressed()
     abstract fun onSwapScreens()
-    abstract fun onQuickSave()
-    abstract fun onQuickLoad()
 }

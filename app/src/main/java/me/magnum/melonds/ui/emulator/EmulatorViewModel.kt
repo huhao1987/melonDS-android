@@ -157,7 +157,6 @@ class EmulatorViewModel @Inject constructor(
 
     fun getRomLoader(rom: Rom): Single<Pair<Rom, Uri>> {
         val fileRomProcessor = romFileProcessorFactory.getFileRomProcessorForDocument(rom.uri)
-        // ?.flatMap { WfcRomPatcher().patchRom(rom, it).andThen(Single.just(it)) }
         return fileRomProcessor?.getRealRomUri(rom)?.map { rom to it } ?: Single.error(RomLoadException("Unsupported ROM file extension"))
     }
 
@@ -181,10 +180,6 @@ class EmulatorViewModel @Inject constructor(
 
     fun getRomSaveStateSlots(rom: Rom): List<SaveStateSlot> {
         return saveStatesRepository.getRomSaveStates(rom)
-    }
-
-    fun getRomQuickSaveStateSlot(rom: Rom): SaveStateSlot {
-        return saveStatesRepository.getRomQuickSaveStateSlot(rom)
     }
 
     fun getRomSaveStateSlotUri(rom: Rom, saveState: SaveStateSlot): Uri {
