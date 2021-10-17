@@ -1,7 +1,17 @@
  # melonDS_hh version
  This is a version which is forked from https://github.com/rafaelvcaetano/melonDS-android, but add some special features.
  ## Update:
- Add Chinese translation
+ * Add Chinese translation
+ * Support usrcheat.dat cheat system
+ * * Usage:
+ * * * 1. Put usrcheat.dat file into the ROM folder.
+ * * * 2. Enable the cheat function in emulator.
+ * * * 3. Open the game, press back button, choose "usrcheat.dat" option
+ * * Unfinish parts:
+ * * * 1. The single choosen folder does not split, it means some cheats will show as mutilple choosen.
+ * * * 2. All cheats in root folder will be placed in a folder named "root"
+ 
+## [点击显示中文Readme](https://github.com/huhao1987/melonDS-android/blob/hh/README_CN.md)
 
 ## Original melonDS version details
 ### What is working
