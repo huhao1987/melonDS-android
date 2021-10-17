@@ -66,6 +66,11 @@
             android:exported="false" >
         </activity>
         <activity
+            android:name=".usrcheat.CheatsDatActivity"
+            android:label="@string/cheats"
+            android:exported="false" >
+        </activity>
+        <activity
             android:name=".ui.layouts.LayoutListActivity"
             android:label="@string/layouts"
             android:parentActivityName=".ui.settings.SettingsActivity"

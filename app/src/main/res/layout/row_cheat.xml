@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/cheat"
+        android:textSize="20dp"
+        android:textIsSelectable="true"
+        android:layout_toLeftOf="@+id/cheatcheck"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/cheatcode"
+        android:layout_toLeftOf="@+id/cheatcheck"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cheat"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textIsSelectable="true"
+        android:textSize="20dp" />
+    <RadioButton
+        android:id="@+id/cheatradio"
+        android:layout_alignTop="@+id/cheat"
+        android:layout_alignBottom="@+id/cheatcode"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <CheckBox
+        android:id="@+id/cheatcheck"
+        android:layout_alignTop="@+id/cheat"
+        android:layout_alignBottom="@+id/cheatcode"
+        android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

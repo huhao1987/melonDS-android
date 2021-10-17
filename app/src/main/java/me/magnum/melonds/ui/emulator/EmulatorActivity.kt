@@ -19,8 +19,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.*
+import com.blankj.utilcode.util.CacheDoubleUtils
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import hh.game.usrcheat_android.usrcheat.UsrCheatUtils.Companion.toHex
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
@@ -39,11 +41,13 @@ import me.magnum.melonds.extensions.setLayoutOrientation
 import me.magnum.melonds.parcelables.RomInfoParcelable
 import me.magnum.melonds.parcelables.RomParcelable
 import me.magnum.melonds.ui.cheats.CheatsActivity
+import me.magnum.melonds.usrcheat.CheatsDatActivity
 import me.magnum.melonds.ui.emulator.DSRenderer.RendererListener
 import me.magnum.melonds.ui.emulator.firmware.FirmwareEmulatorDelegate
 import me.magnum.melonds.ui.emulator.input.*
 import me.magnum.melonds.ui.emulator.rom.RomEmulatorDelegate
 import me.magnum.melonds.ui.settings.SettingsActivity
+import me.magnum.melonds.usrcheat.usrceheatUtil
 import java.net.URLEncoder
 import java.nio.ByteBuffer
 import javax.inject.Inject
@@ -499,9 +503,22 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
 
         val intent = Intent(this, CheatsActivity::class.java)
         intent.putExtra(CheatsActivity.KEY_ROM_INFO, RomInfoParcelable.fromRomInfo(romInfo))
+
         cheatsLauncher.launch(intent)
     }
 
+    fun openUsrCheats(rom: Rom, onCheatsClosed: () -> Unit) {
+        cheatsClosedListener = onCheatsClosed
+        val romInfo = viewModel.getRomInfo(rom) ?: return
+
+//        val intent = Intent(this, CheatsActivity::class.java)
+//        intent.putExtra(CheatsActivity.KEY_ROM_INFO, RomInfoParcelable.fromRomInfo(romInfo))
+
+        val intent = Intent(this, CheatsDatActivity::class.java)
+        intent.putExtra(CheatsDatActivity.KEY_ROM_INFO, RomInfoParcelable.fromRomInfo(romInfo))
+        intent.putExtra(KEY_ROM, RomParcelable(rom))
+        cheatsLauncher.launch(intent)
+    }
     /**
      * Returns a [Single] that emits the emulator's configuration taking into account permissions that have not been granted. If the provided base configuration requires the
      * use of certain permissions and [requestPermissions] is true, they will be requested to the user before returning the final configuration.
@@ -592,7 +609,7 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
         if (emulatorReady) {
             MelonEmulator.stopEmulation()
         }
-
+        usrceheatUtil.enablegameCheatList=null
         microphonePermissionSubject.onComplete()
         emulatorSetupDisposable?.dispose()
         delegate.dispose()

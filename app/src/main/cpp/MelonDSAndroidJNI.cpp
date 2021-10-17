@@ -70,12 +70,14 @@ Java_me_magnum_melonds_MelonEmulator_setupCheats(JNIEnv* env, jobject thiz, jobj
 
     jclass cheatClass = env->GetObjectClass(env->GetObjectArrayElement(cheats, 0));
     jfieldID codeField = env->GetFieldID(cheatClass, "code", "Ljava/lang/String;");
+    jfieldID enablecheatField = env->GetFieldID(cheatClass, "enabled", "Z");
 
-    std::list<MelonDSAndroid::Cheat> internalCheats;
+std::list<MelonDSAndroid::Cheat> internalCheats;
 
     for (int i = 0; i < cheatCount; ++i) {
         jobject cheat = env->GetObjectArrayElement(cheats, i);
         jstring code = (jstring) env->GetObjectField(cheat, codeField);
+        jboolean enable=env->GetBooleanField(cheat,enablecheatField);
         std::string codeString = env->GetStringUTFChars(code, JNI_FALSE);
 
         bool isBad = false;
@@ -84,7 +86,7 @@ Java_me_magnum_melonds_MelonEmulator_setupCheats(JNIEnv* env, jobject thiz, jobj
         std::size_t end = 0;
 
         MelonDSAndroid::Cheat internalCheat;
-
+        internalCheat.enable=bool(enable);
         // Split code string into sections separated by a space
         while ((end = codeString.find(' ', start)) != std::string::npos) {
             if (end != start) {

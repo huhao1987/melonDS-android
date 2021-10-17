@@ -7,7 +7,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.core.os.ConfigurationCompat
 import androidx.lifecycle.Observer
+import com.blankj.utilcode.util.CacheDoubleUtils
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.squareup.picasso.Picasso
+import hh.game.usrcheat_android.usrcheat.Gamedetail
+import hh.game.usrcheat_android.usrcheat.UsrCheatUtils.Companion.toHex
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -16,6 +21,7 @@ import io.reactivex.disposables.Disposable
 import me.magnum.melonds.MelonEmulator
 import me.magnum.melonds.R
 import me.magnum.melonds.domain.model.*
+import me.magnum.melonds.parcelables.RomInfoParcelable
 import me.magnum.melonds.parcelables.RomParcelable
 import me.magnum.melonds.ui.emulator.EmulatorActivity
 import me.magnum.melonds.ui.emulator.EmulatorDelegate
@@ -28,6 +34,7 @@ class RomEmulatorDelegate(activity: EmulatorActivity, private val picasso: Picas
         SAVE_STATE(R.string.save_state),
         LOAD_STATE(R.string.load_state),
         CHEATS(R.string.cheats),
+        USRCHEAT(R.string.usrcheats),
         RESET(R.string.reset),
         EXIT(R.string.exit)
     }
@@ -37,7 +44,7 @@ class RomEmulatorDelegate(activity: EmulatorActivity, private val picasso: Picas
 
     override fun getEmulatorSetupObservable(extras: Bundle?): Completable {
         val romParcelable = extras?.getParcelable(EmulatorActivity.KEY_ROM) as RomParcelable?
-
+        romParcelable?.rom
         val romLoader = if (romParcelable?.rom != null) {
             Maybe.just(romParcelable.rom)
         } else {
@@ -66,7 +73,6 @@ class RomEmulatorDelegate(activity: EmulatorActivity, private val picasso: Picas
             activity.viewModel.getRomLoader(rom)
         }.flatMap { romPair ->
             loadedRom = romPair.first
-
             loadRomCheats(loadedRom).toSingle(emptyList()).zipWith(getEmulatorLaunchConfiguration(loadedRom)) { cheats, emulatorConfiguration ->
                 Pair(cheats, emulatorConfiguration)
             }.flatMap { (cheats, emulatorConfiguration) ->
@@ -84,8 +90,8 @@ class RomEmulatorDelegate(activity: EmulatorActivity, private val picasso: Picas
                     if (loadResult.isTerminal) {
                         throw EmulatorActivity.RomLoadFailedException(loadResult)
                     }
-
                     MelonEmulator.setupCheats(cheats.toTypedArray())
+                    enableUsrcheatcode(rom)
                     emitter.onSuccess(loadResult)
                 }
             }
@@ -98,6 +104,26 @@ class RomEmulatorDelegate(activity: EmulatorActivity, private val picasso: Picas
         }.ignoreElement()
     }
 
+    private fun enableUsrcheatcode(rom: Rom){
+        //Load usrcheat cheats
+        val romInfo = activity.viewModel.getRomInfo(rom)
+        romInfo?.let {
+            var romInfoParcelable= RomInfoParcelable.fromRomInfo(it)
+            var tag = romInfoParcelable.gameCode + romInfoParcelable.headerChecksum.toBigInteger()
+                .toByteArray().toHex()
+            var enablecheats=CacheDoubleUtils.getInstance().getString(tag+"enablecheat")
+            if(enablecheats!=null) {
+                var list: ArrayList<Cheat> =
+                    Gson().fromJson(
+                        enablecheats,
+                        object : TypeToken<ArrayList<Cheat>>() {}.type
+                    )
+                if (list.size > 0) {
+                    MelonEmulator.setupCheats(list.toTypedArray())
+                }
+            }
+        }
+    }
     private fun showRomNotFoundDialog() {
         activity.runOnUiThread {
             AlertDialog.Builder(activity)
@@ -156,7 +182,10 @@ class RomEmulatorDelegate(activity: EmulatorActivity, private val picasso: Picas
 
                 activity.resumeEmulation()
             }
+            RomPauseMenuOptions.USRCHEAT -> openUsrCheatActivity()
+            // Read cheat from usrcheat.dat
             RomPauseMenuOptions.CHEATS -> openCheatsActivity()
+
             RomPauseMenuOptions.RESET -> activity.resetEmulation()
             RomPauseMenuOptions.EXIT -> activity.finish()
         }
@@ -235,5 +264,15 @@ class RomEmulatorDelegate(activity: EmulatorActivity, private val picasso: Picas
         }
     }
 
+    private fun openUsrCheatActivity(){
+        activity.openUsrCheats(loadedRom) {
+//            cheatsLoadDisposable?.dispose()
+//            cheatsLoadDisposable = loadRomCheats(loadedRom).observeOn(AndroidSchedulers.mainThread())
+//                .subscribe {
+//                    MelonEmulator.setupCheats(it.toTypedArray())
+//                    activity.resumeEmulation()
+//                }
+        }
+    }
     private data class RomCrashContext(val emulatorConfiguration: EmulatorConfiguration, val romSearchDirUri: String?, val romUri: Uri, val sramUri: Uri?)
 }

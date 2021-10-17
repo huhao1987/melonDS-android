@@ -11,18 +11,18 @@ plugins {
 android {
     signingConfigs {
         create("release") {
-            val props = gradleLocalProperties(rootDir)
-            storeFile = file(props["MELONDS_KEYSTORE"] as String)
-            storePassword = props["MELONDS_KEYSTORE_PASSWORD"] as String
-            keyAlias = props["MELONDS_KEY_ALIAS"] as String
-            keyPassword = props["MELONDS_KEY_PASSWORD"] as String
+//            val props = gradleLocalProperties(rootDir)
+//            storeFile = file(props["MELONDS_KEYSTORE"] as String)
+//            storePassword = props["MELONDS_KEYSTORE_PASSWORD"] as String
+//            keyAlias = props["MELONDS_KEY_ALIAS"] as String
+//            keyPassword = props["MELONDS_KEY_PASSWORD"] as String
         }
     }
 
     compileSdk = AppConfig.compileSdkVersion
     ndkVersion = AppConfig.ndkVersion
     defaultConfig {
-        applicationId = "me.magnum.melonds"
+        applicationId = "me.magnum.melonds_hh"
         minSdk = AppConfig.minSdkVersion
         targetSdk = AppConfig.targetSdkVersion
         versionCode = AppConfig.versionCode
@@ -146,6 +146,10 @@ dependencies {
     with(Dependencies.Testing) {
         testImplementation(junit)
     }
+    implementation(project(":usrcheat_android"))
+    implementation("com.blankj:utilcodex:1.30.6")
+    implementation ("com.google.code.gson:gson:2.8.8")
+
 }
 
 repositories {

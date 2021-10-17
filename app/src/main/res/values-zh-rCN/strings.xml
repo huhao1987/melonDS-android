@@ -216,4 +216,9 @@
     <string name="background_deleted">背景已删除</string>
     <string name="background_add_wrong_orientation">背景已添加,但它无法在所选方向中</string>
     <string name="background_add_processing_failed">无法处理所选背景图片,请确定它未损坏.</string>
+    <string name="usrcheatloading">如果代码数量很多,第一次加载时会比较慢,但以后加载速度就会正常了.</string>
+    <string name="usrcheatmoditied">usrcheat.dat文件被更改,数据将会刷新以确保金手指运行正常.</string>
+    <string name="usrcheatnotexist">无法找到usrcheat.dat文件,请将此文件放入rom文件夹内</string>
+    <string name="usrcheatfilewrong">usrcheat.dat损坏,请替换一个正确的文件</string>
+    <string name="usrcheatnocheat">usrcheat金手指库中无本游戏代码</string>
 </resources>

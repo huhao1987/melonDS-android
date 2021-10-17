@@ -339,4 +339,10 @@
         <item>Fit right</item>
     </string-array>
     <string name="randomize_mac_address_summary">When enabled, a random MAC address is used at every boot. This may cause some games to think its running on a different system and can break time based events.</string>
+    <string name="usrcheatloading">If the number of the cheats is large, it might takes time to load it at first time, but it will be quick next time.</string>
+    <string name="usrcheatmoditied">Looks like you change the usrcheat.dat file, the data will be refresh to ensure everything are all right.</string>
+    <string name="usrcheatnotexist">Looks like the usrcheat.dat doesn`t exist, please put it in the rom folder.</string>
+    <string name="usrcheatfilewrong">Looks like the usrcheat.dat damage, please try another one.</string>
+    <string name="usrcheatnocheat">No cheats in the usrcheat.dat</string>
+
 </resources>
