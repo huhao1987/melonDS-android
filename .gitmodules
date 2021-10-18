@@ -1,3 +1,6 @@
 [submodule "melonDS-android-lib"]
 	path = melonDS-android-lib
 	url = https://github.com/rafaelvcaetano/melonDS-android-lib.git
+[submodule "usrcheat_android"]
+	path = usrcheat_android
+	url = https://github.com/huhao1987/usrcheat_android.git
