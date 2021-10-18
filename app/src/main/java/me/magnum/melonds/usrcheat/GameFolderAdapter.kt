@@ -30,20 +30,25 @@ class GameFolderAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var gamefolder = gamefolderlist[position]
         //This means the codes in root folder
-        Log.d("thegamedetail:::",gamefolder.Name+" "+ gamefolder.isSingleChoosen)
+        Log.d("thegamedetail:::", gamefolder.Name + " " + gamefolder.isSingleChoosen)
         if (gamefolder.Name.equals(""))
             holder.cheat.text = "root"
         else
-            holder.cheat.text = gamefolder.Name + " " + gamefolder.Desc+if(gamefolder.isSingleChoosen)"(单选)" else ""
+            holder.cheat.text =
+                gamefolder.Name + " " + gamefolder.Desc + if (gamefolder.isSingleChoosen) "(单选)" else ""
 
         gamefolder.codelist?.apply {
-            var adapter = GameCodeAdapter(context, gamefolder.isSingleChoosen,this, object : GameCodeAdapter.onCheckListener {
-                override fun onCheck(codelist: ArrayList<GameCode>) {
-                    gamefolder.codelist=codelist
-                    gamefolderlist.set(holder.absoluteAdapterPosition,gamefolder)
-                    oncheckListener.onCheck(gamefolderlist,codelist)
-                }
-            })
+            var adapter = GameCodeAdapter(
+                context,
+                gamefolder.isSingleChoosen,
+                this,
+                object : GameCodeAdapter.onCheckListener {
+                    override fun onCheck(codelist: ArrayList<GameCode>) {
+                        gamefolder.codelist = codelist
+                        gamefolderlist.set(holder.absoluteAdapterPosition, gamefolder)
+                        oncheckListener.onCheck(gamefolderlist,)
+                    }
+                })
             var llm = LinearLayoutManager(context)
             llm!!.orientation = RecyclerView.VERTICAL
             holder.codelist.layoutManager = llm
@@ -75,7 +80,8 @@ class GameFolderAdapter(
     interface onClickListener {
         fun onclick(view: View, gamedetail: Gamedetail, position: Int, nextpointer: Int)
     }
-    interface onCheckListener{
-        fun onCheck(folderlist:ArrayList<GameFolder>,codelist:ArrayList<GameCode>)
+
+    interface onCheckListener {
+        fun onCheck(folderlist: ArrayList<GameFolder>)
     }
 }

@@ -105,12 +105,19 @@ class CheatsDatActivity : AppCompatActivity() {
                                             },
                                             object : GameFolderAdapter.onCheckListener {
                                                 override fun onCheck(
-                                                    folderlist: ArrayList<GameFolder>,
-                                                    codelist: ArrayList<GameCode>
+                                                    folderlist: ArrayList<GameFolder>
                                                 ) {
                                                     usrceheatUtil.enablegameCheatList = folderlist
                                                     viewModel.saveCheatlist(folderlist)
-                                                    this@CheatsDatActivity.codelist = codelist
+                                                    var tempcodelist=ArrayList<GameCode>()
+                                                    folderlist.forEach {
+                                                        var clist=it.codelist?.filter {
+                                                            it.isCodeEnabled==true
+                                                        }
+                                                        if(clist!=null&&clist.size>0)
+                                                        tempcodelist+=ArrayList(clist)
+                                                    }
+                                                    this@CheatsDatActivity.codelist = tempcodelist
                                                 }
                                             })
                                         var cheatlistview =
