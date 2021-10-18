@@ -221,4 +221,5 @@
     <string name="usrcheatnotexist">无法找到usrcheat.dat文件,请将此文件放入rom文件夹内</string>
     <string name="usrcheatfilewrong">usrcheat.dat损坏,请替换一个正确的文件</string>
     <string name="usrcheatnocheat">usrcheat金手指库中无本游戏代码</string>
+    <string name="singlechosen">(单选)</string>
 </resources>

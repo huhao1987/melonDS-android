@@ -344,5 +344,5 @@
     <string name="usrcheatnotexist">Looks like the usrcheat.dat doesn`t exist, please put it in the rom folder.</string>
     <string name="usrcheatfilewrong">Looks like the usrcheat.dat damage, please try another one.</string>
     <string name="usrcheatnocheat">No cheats in the usrcheat.dat</string>
-
+    <string name="singlechosen">(Single choose)</string>
 </resources>

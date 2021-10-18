@@ -23,12 +23,15 @@
         android:layout_marginRight="10dp"
         android:textIsSelectable="true"
         android:textSize="20dp" />
-    <RadioButton
+    <me.magnum.melonds.usrcheat.CheckableImageView
         android:id="@+id/cheatradio"
+        android:src="@drawable/radio_button"
         android:layout_alignTop="@+id/cheat"
         android:layout_alignBottom="@+id/cheatcode"
         android:layout_alignParentRight="true"
+        android:clickable="true"
         android:visibility="gone"
+        android:layout_marginRight="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <CheckBox

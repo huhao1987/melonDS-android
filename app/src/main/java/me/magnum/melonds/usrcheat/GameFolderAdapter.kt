@@ -30,12 +30,11 @@ class GameFolderAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var gamefolder = gamefolderlist[position]
         //This means the codes in root folder
-        Log.d("thegamedetail:::", gamefolder.Name + " " + gamefolder.isSingleChoosen)
         if (gamefolder.Name.equals(""))
             holder.cheat.text = "root"
         else
             holder.cheat.text =
-                gamefolder.Name + " " + gamefolder.Desc + if (gamefolder.isSingleChoosen) "(单选)" else ""
+                gamefolder.Name + " " + gamefolder.Desc + if (gamefolder.isSingleChoosen) context.getString(R.string.singlechosen) else ""
 
         gamefolder.codelist?.apply {
             var adapter = GameCodeAdapter(

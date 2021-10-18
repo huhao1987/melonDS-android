@@ -38,6 +38,7 @@ class usrcheatViewModel : ViewModel() {
     fun getGametitleList(context: Context, rom: Rom): LiveData<ArrayList<Gamedetail>> {
         if (gametitlelistdata != null) return gametitlelistdata!!
         UsrCheatUtils.fileuri = Uri.parse(rom.parentTreeUri.toString() + "%2Fusrcheat.dat")
+        viewModelScope.launch {
         var documentfile = UsrCheatUtils.fileuri?.toDocumentFile(context)
         documentfile?.apply {
             if (!documentfile.lastModified().toString()
@@ -57,7 +58,7 @@ class usrcheatViewModel : ViewModel() {
                 gametitlelistdata?.postValue(list)
             } else cleanAllCache()
         } else {
-            viewModelScope.launch {
+
                 try{
                 UsrCheatUtils.init(
                     context,
@@ -96,6 +97,7 @@ class usrcheatViewModel : ViewModel() {
         gametitlelist: ArrayList<Gamedetail>
     ): LiveData<Gamedetail> {
         if (gamedetaildata != null) return gamedetaildata!!
+        viewModelScope.launch {
         gamedetaildata = MutableLiveData()
         tag = romInfoParcelable.gameCode + romInfoParcelable.headerChecksum.toBigInteger()
             .toByteArray().toHex()
@@ -105,7 +107,7 @@ class usrcheatViewModel : ViewModel() {
             if (gamedetail != null && gamedetail.gameTitle != null) {
                 gamedetaildata?.postValue(gamedetail)
             } else {
-                viewModelScope.launch {
+
                     var gamedetails = gametitlelist.filter {
                         it.gameId == romInfoParcelable.gameCode && it.gameIdNum!!.equals(
                             romInfoParcelable.headerChecksum.toBigInteger().toByteArray().toHex()
@@ -131,6 +133,7 @@ class usrcheatViewModel : ViewModel() {
         gamedetail: Gamedetail
     ): LiveData<ArrayList<GameFolder>> {
         if (gamecheat != null) return gamecheat!!
+        viewModelScope.launch {
         gamecheat = MutableLiveData()
         if (usrceheatUtil.enablegameCheatList != null) gamecheat!!.postValue(usrceheatUtil.enablegameCheatList)
         else {
@@ -144,7 +147,7 @@ class usrcheatViewModel : ViewModel() {
                         gamecheat?.postValue(list)
                     } else cleanGameCache(tag!! + CHEATSUBTAG)
                 } else {
-                    viewModelScope.launch {
+
                         var index = gametitlelist.indexOf(gamedetail)
                         var cheatlist = UsrCheatUtils.getCheatCodes(
                             context,
