@@ -25,10 +25,14 @@
 -keep class me.magnum.melonds.domain.model.RendererConfiguration { *; }
 -keep class me.magnum.melonds.domain.model.FirmwareConfiguration { *; }
 -keep class me.magnum.melonds.domain.model.EmulatorConfiguration { *; }
+-keep class me.magnum.melonds.domain.model.AudioBitrate { *; }
+-keep class me.magnum.melonds.domain.model.AudioInterpolation { *; }
 -keep class me.magnum.melonds.domain.model.AudioLatency { *; }
 -keep class me.magnum.melonds.domain.model.ConsoleType { *; }
 -keep class me.magnum.melonds.domain.model.MicSource { *; }
 -keep class me.magnum.melonds.domain.model.Cheat { *; }
+-keep class me.magnum.melonds.ui.emulator.rewind.model.RewindSaveState { *; }
+-keep class me.magnum.melonds.ui.emulator.rewind.model.RewindWindow { *; }
 -keep class me.magnum.melonds.ui.settings.fragments.**
 -keep class me.magnum.melonds.common.UriFileHandler {
     public int open(java.lang.String, java.lang.String);

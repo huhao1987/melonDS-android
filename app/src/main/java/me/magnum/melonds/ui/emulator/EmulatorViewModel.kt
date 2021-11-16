@@ -19,20 +19,22 @@ import me.magnum.melonds.domain.repositories.*
 import me.magnum.melonds.extensions.addTo
 import me.magnum.melonds.ui.emulator.exceptions.RomLoadException
 import me.magnum.melonds.ui.emulator.exceptions.SramLoadException
+import me.magnum.melonds.ui.emulator.firmware.FirmwarePauseMenuOption
+import me.magnum.melonds.ui.emulator.rom.RomPauseMenuOption
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class EmulatorViewModel @Inject constructor(
-        private val settingsRepository: SettingsRepository,
-        private val romsRepository: RomsRepository,
-        private val cheatsRepository: CheatsRepository,
-        private val romFileProcessorFactory: RomFileProcessorFactory,
-        private val layoutsRepository: LayoutsRepository,
-        private val backgroundsRepository: BackgroundRepository,
-        private val saveStatesRepository: SaveStatesRepository,
-        private val uriHandler: UriHandler,
-        private val schedulers: Schedulers
+    private val settingsRepository: SettingsRepository,
+    private val romsRepository: RomsRepository,
+    private val cheatsRepository: CheatsRepository,
+    private val romFileProcessorFactory: RomFileProcessorFactory,
+    private val layoutsRepository: LayoutsRepository,
+    private val backgroundsRepository: BackgroundRepository,
+    private val saveStatesRepository: SaveStatesRepository,
+    private val uriHandler: UriHandler,
+    private val schedulers: Schedulers
 ) : ViewModel() {
 
     private val disposables = CompositeDisposable()
@@ -61,32 +63,32 @@ class EmulatorViewModel @Inject constructor(
         } else {
             // Load and observe ROM layout but switch to global layout if not found
             layoutsRepository.getLayout(romLayoutId)
-                    .flatMapObservable {
-                        // Continue observing the ROM layout but if the observable completes, this means that it is no
-                        // longer available. From that point on, start observing the global layout
-                        layoutsRepository.observeLayout(romLayoutId).concatWith(getGlobalLayoutObservable())
-                    }
-                    .switchIfEmpty(getGlobalLayoutObservable())
+                .flatMapObservable {
+                    // Continue observing the ROM layout but if the observable completes, this means that it is no
+                    // longer available. From that point on, start observing the global layout
+                    layoutsRepository.observeLayout(romLayoutId).concatWith(getGlobalLayoutObservable())
+                }
+                .switchIfEmpty(getGlobalLayoutObservable())
         }
 
         layoutLoadDisposable?.dispose()
         layoutLoadDisposable = layoutObservable.subscribeOn(schedulers.backgroundThreadScheduler)
-                .observeOn(schedulers.uiThreadScheduler)
-                .subscribe {
-                    layoutLiveData.value = it
-                    loadBackgroundForCurrentLayout()
-                }
+            .observeOn(schedulers.uiThreadScheduler)
+            .subscribe {
+                layoutLiveData.value = it
+                loadBackgroundForCurrentLayout()
+            }
     }
 
     fun loadLayoutForFirmware() {
         layoutLoadDisposable?.dispose()
         layoutLoadDisposable = getGlobalLayoutObservable()
-                .subscribeOn(schedulers.backgroundThreadScheduler)
-                .observeOn(schedulers.uiThreadScheduler)
-                .subscribe {
-                    layoutLiveData.value = it
-                    loadBackgroundForCurrentLayout()
-                }
+            .subscribeOn(schedulers.backgroundThreadScheduler)
+            .observeOn(schedulers.uiThreadScheduler)
+            .subscribe {
+                layoutLiveData.value = it
+                loadBackgroundForCurrentLayout()
+            }
     }
 
     fun getBackground(): LiveData<RuntimeBackground> {
@@ -111,11 +113,11 @@ class EmulatorViewModel @Inject constructor(
             backgroundLiveData.value = RuntimeBackground(null, mode)
         } else {
             backgroundLoadDisposable = backgroundsRepository.getBackground(backgroundId)
-                    .subscribeOn(schedulers.backgroundThreadScheduler)
-                    .materialize()
-                    .subscribe { message ->
-                        backgroundLiveData.postValue(RuntimeBackground(message.value, mode))
-                    }
+                .subscribeOn(schedulers.backgroundThreadScheduler)
+                .materialize()
+                .subscribe { message ->
+                    backgroundLiveData.postValue(RuntimeBackground(message.value, mode))
+                }
         }
     }
 
@@ -143,12 +145,12 @@ class EmulatorViewModel @Inject constructor(
 
     private fun getGlobalLayoutObservable(): Observable<LayoutConfiguration> {
         return settingsRepository.observeSelectedLayoutId()
-                .startWith(settingsRepository.getSelectedLayoutId())
-                .switchMap { layoutId ->
-                    layoutsRepository.getLayout(layoutId)
-                            .flatMapObservable { layoutsRepository.observeLayout(layoutId).startWith(it) }
-                            .switchIfEmpty(layoutsRepository.observeLayout(LayoutConfiguration.DEFAULT_ID))
-                }
+            .startWith(settingsRepository.getSelectedLayoutId())
+            .switchMap { layoutId ->
+                layoutsRepository.getLayout(layoutId)
+                    .flatMapObservable { layoutsRepository.observeLayout(layoutId).startWith(it) }
+                    .switchIfEmpty(layoutsRepository.observeLayout(LayoutConfiguration.DEFAULT_ID))
+            }
     }
 
     fun isTouchHapticFeedbackEnabled(): Boolean {
@@ -157,6 +159,7 @@ class EmulatorViewModel @Inject constructor(
 
     fun getRomLoader(rom: Rom): Single<Pair<Rom, Uri>> {
         val fileRomProcessor = romFileProcessorFactory.getFileRomProcessorForDocument(rom.uri)
+        // ?.flatMap { WfcRomPatcher().patchRom(rom, it).andThen(Single.just(it)) }
         return fileRomProcessor?.getRealRomUri(rom)?.map { rom to it } ?: Single.error(RomLoadException("Unsupported ROM file extension"))
     }
 
@@ -180,6 +183,10 @@ class EmulatorViewModel @Inject constructor(
 
     fun getRomSaveStateSlots(rom: Rom): List<SaveStateSlot> {
         return saveStatesRepository.getRomSaveStates(rom)
+    }
+
+    fun getRomQuickSaveStateSlot(rom: Rom): SaveStateSlot {
+        return saveStatesRepository.getRomQuickSaveStateSlot(rom)
     }
 
     fun getRomSaveStateSlotUri(rom: Rom, saveState: SaveStateSlot): Uri {
@@ -206,18 +213,26 @@ class EmulatorViewModel @Inject constructor(
         val baseConfiguration = settingsRepository.getEmulatorConfiguration()
         val mustUseCustomBios = baseConfiguration.useCustomBios || rom.config.runtimeConsoleType != RuntimeConsoleType.DEFAULT
         return baseConfiguration.copy(
-                useCustomBios = mustUseCustomBios,
-                showBootScreen = baseConfiguration.showBootScreen && mustUseCustomBios,
-                consoleType = getRomOptionOrDefault(rom.config.runtimeConsoleType, baseConfiguration.consoleType),
-                micSource = getRomOptionOrDefault(rom.config.runtimeMicSource, baseConfiguration.micSource)
+            useCustomBios = mustUseCustomBios,
+            showBootScreen = baseConfiguration.showBootScreen && mustUseCustomBios,
+            consoleType = getRomOptionOrDefault(rom.config.runtimeConsoleType, baseConfiguration.consoleType),
+            micSource = getRomOptionOrDefault(rom.config.runtimeMicSource, baseConfiguration.micSource)
         )
     }
 
     fun getEmulatorConfigurationForFirmware(consoleType: ConsoleType): EmulatorConfiguration {
         return settingsRepository.getEmulatorConfiguration().copy(
-                useCustomBios = true, // Running a firmware requires a custom BIOS
-                consoleType = consoleType
+            useCustomBios = true, // Running a firmware requires a custom BIOS
+            consoleType = consoleType
         )
+    }
+
+    fun getRomPauseMenuOptions(): List<PauseMenuOption> {
+        return RomPauseMenuOption.values().filter(this::filterRomPauseMenuOption)
+    }
+
+    fun getFirmwarePauseMenuOptions(): List<PauseMenuOption> {
+        return FirmwarePauseMenuOption.values().toList()
     }
 
     fun isSustainedPerformanceModeEnabled(): Boolean {
@@ -247,6 +262,13 @@ class EmulatorViewModel @Inject constructor(
         }
 
         return liveData
+    }
+
+    private fun filterRomPauseMenuOption(option: RomPauseMenuOption): Boolean {
+        return when (option) {
+            RomPauseMenuOption.REWIND -> settingsRepository.isRewindEnabled()
+            else -> true
+        }
     }
 
     override fun onCleared() {

@@ -17,9 +17,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
 import androidx.core.view.*
+
 import com.blankj.utilcode.util.CacheDoubleUtils
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import hh.game.usrcheat_android.usrcheat.UsrCheatUtils.Companion.toHex
@@ -45,6 +48,9 @@ import me.magnum.melonds.usrcheat.CheatsDatActivity
 import me.magnum.melonds.ui.emulator.DSRenderer.RendererListener
 import me.magnum.melonds.ui.emulator.firmware.FirmwareEmulatorDelegate
 import me.magnum.melonds.ui.emulator.input.*
+import me.magnum.melonds.ui.emulator.rewind.EdgeSpacingDecorator
+import me.magnum.melonds.ui.emulator.rewind.model.RewindSaveState
+import me.magnum.melonds.ui.emulator.rewind.RewindSaveStateAdapter
 import me.magnum.melonds.ui.emulator.rom.RomEmulatorDelegate
 import me.magnum.melonds.ui.settings.SettingsActivity
 import me.magnum.melonds.usrcheat.usrceheatUtil
@@ -85,10 +91,6 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
 
     class FirmwareLoadFailedException(result: MelonEmulator.FirmwareLoadResult) : Exception("Failed to load firmware: $result")
 
-    interface PauseMenuOption {
-        val textResource: Int
-    }
-
     private lateinit var binding: ActivityEmulatorBinding
     val viewModel: EmulatorViewModel by viewModels()
 
@@ -120,7 +122,7 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
 
         override fun onPausePressed() {
             if (emulatorReady) {
-                pauseEmulation()
+                showPauseMenu()
             }
         }
 
@@ -138,6 +140,16 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
         override fun onSwapScreens() {
             swapScreen()
         }
+
+
+        override fun onQuickSave() {
+            delegate.performQuickSave()
+        }
+
+        override fun onQuickLoad() {
+            delegate.performQuickLoad()
+        }
+
     }
     private val settingsLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         val newEmulatorConfiguration = delegate.getEmulatorConfiguration()
@@ -156,6 +168,10 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
         microphonePermissionSubject.onNext(it)
     }
 
+    private val rewindSaveStateAdapter = RewindSaveStateAdapter {
+        MelonEmulator.loadRewindState(it)
+        closeRewindWindow()
+    }
     private val microphonePermissionSubject = PublishSubject.create<Boolean>()
     private var emulatorSetupDisposable: Disposable? = null
     private var cheatsClosedListener: (() -> Unit)? = null
@@ -185,6 +201,15 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
 
         binding.textFps.visibility = View.INVISIBLE
         binding.viewLayoutControls.setLayoutComponentViewBuilderFactory(RuntimeLayoutComponentViewBuilderFactory())
+        binding.layoutRewind.setOnClickListener {
+            closeRewindWindow()
+        }
+        binding.listRewind.apply {
+            val listLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, true)
+            layoutManager = listLayoutManager
+            addItemDecoration(EdgeSpacingDecorator())
+            adapter = rewindSaveStateAdapter
+        }
 
         viewModel.getBackground().observe(this) {
             dsRenderer.setBackground(it)
@@ -238,8 +263,9 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
         super.onResume()
         binding.surfaceMain.onResume()
 
-        if (emulatorReady && !emulatorPaused)
+        if (emulatorReady && !emulatorPaused) {
             MelonEmulator.resumeEmulation()
+        }
     }
 
     private fun launchEmulator() {
@@ -303,31 +329,33 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
             binding.textFps.isGone = true
         } else {
             binding.textFps.isVisible = true
-            val newParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
+            val newParams = ConstraintLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
             when (fpsCounterPosition) {
                 FpsCounterPosition.TOP_LEFT -> {
-                    newParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-                    newParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
+                    newParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                    newParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
                 }
                 FpsCounterPosition.TOP_CENTER -> {
-                    newParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
-                    newParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
+                    newParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                    newParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
+                    newParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID
                 }
                 FpsCounterPosition.TOP_RIGHT -> {
-                    newParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-                    newParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
+                    newParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                    newParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID
                 }
                 FpsCounterPosition.BOTTOM_LEFT -> {
-                    newParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-                    newParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+                    newParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+                    newParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
                 }
                 FpsCounterPosition.BOTTOM_CENTER -> {
-                    newParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
-                    newParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+                    newParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+                    newParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
+                    newParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID
                 }
                 FpsCounterPosition.BOTTOM_RIGHT -> {
-                    newParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-                    newParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+                    newParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+                    newParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID
                 }
             }
             binding.textFps.layoutParams = newParams
@@ -371,6 +399,11 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
             binding.viewLayoutControls.getLayoutComponentView(LayoutComponent.BUTTON_FAST_FORWARD_TOGGLE)?.view?.setOnTouchListener(SingleButtonInputHandler(frontendInputHandler, Input.FAST_FORWARD, enableHapticFeedback, touchVibrator))
             binding.viewLayoutControls.getLayoutComponentView(LayoutComponent.BUTTON_TOGGLE_SOFT_INPUT)?.view?.setOnTouchListener(SingleButtonInputHandler(frontendInputHandler, Input.TOGGLE_SOFT_INPUT, enableHapticFeedback, touchVibrator))
             binding.viewLayoutControls.getLayoutComponentView(LayoutComponent.BUTTON_SWAP_SCREENS)?.view?.setOnTouchListener(SingleButtonInputHandler(frontendInputHandler, Input.SWAP_SCREENS, enableHapticFeedback, touchVibrator))
+
+            binding.viewLayoutControls.getLayoutComponentView(LayoutComponent.BUTTON_QUICK_SAVE)?.view?.setOnTouchListener(SingleButtonInputHandler(frontendInputHandler, Input.QUICK_SAVE, enableHapticFeedback, touchVibrator))
+            binding.viewLayoutControls.getLayoutComponentView(LayoutComponent.BUTTON_QUICK_LOAD)?.view?.setOnTouchListener(SingleButtonInputHandler(frontendInputHandler, Input.QUICK_LOAD, enableHapticFeedback, touchVibrator))
+            binding.viewLayoutControls.getLayoutComponentView(LayoutComponent.BUTTON_REWIND)?.view?.setOnTouchListener(SingleButtonInputHandler(frontendInputHandler, Input.REWIND, enableHapticFeedback, touchVibrator))
+
 
             binding.viewLayoutControls.getLayoutComponentViews().forEach {
                 if (!it.component.isScreen()) {
@@ -429,25 +462,32 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
 
     override fun onBackPressed() {
         if (emulatorReady) {
-            this.pauseEmulation()
+            if (isRewindWindowOpen()) {
+                closeRewindWindow()
+            } else {
+                this.showPauseMenu()
+            }
         } else {
             super.onBackPressed()
         }
     }
 
-    fun pauseEmulation() {
-        emulatorPaused = true
+    private fun showPauseMenu() {
+        pauseEmulation()
         val values = delegate.getPauseMenuOptions()
         val options = Array(values.size) { i -> getString(values[i].textResource) }
-
-        MelonEmulator.pauseEmulation()
-        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         AlertDialog.Builder(this)
                 .setTitle(R.string.pause)
                 .setItems(options) { _, which -> delegate.onPauseMenuOptionSelected(values[which]) }
                 .setOnCancelListener { resumeEmulation() }
                 .show()
+    }
+
+    private fun pauseEmulation() {
+        emulatorPaused = true
+        MelonEmulator.pauseEmulation()
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     fun resumeEmulation() {
@@ -476,7 +516,7 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        if (nativeInputListener.onKeyEvent(event))
+        if (!isRewindWindowOpen() && nativeInputListener.onKeyEvent(event))
             return true
 
         return super.dispatchKeyEvent(event)
@@ -507,6 +547,7 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
         cheatsLauncher.launch(intent)
     }
 
+
     fun openUsrCheats(rom: Rom, onCheatsClosed: () -> Unit) {
         cheatsClosedListener = onCheatsClosed
         val romInfo = viewModel.getRomInfo(rom) ?: return
@@ -519,6 +560,29 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
         intent.putExtra(KEY_ROM, RomParcelable(rom))
         cheatsLauncher.launch(intent)
     }
+
+    private fun isRewindWindowOpen(): Boolean {
+        return binding.root.currentState == R.id.rewind_visible
+    }
+
+    fun openRewindWindow() {
+        binding.root.transitionToState(R.id.rewind_visible)
+        val rewindWindow = MelonEmulator.getRewindWindow()
+        rewindSaveStateAdapter.setRewindWindow(rewindWindow)
+    }
+
+    private fun closeRewindWindow() {
+        binding.root.transitionToState(R.id.rewind_hidden)
+        MelonEmulator.resumeEmulation()
+    }
+
+    fun rewindToState(state: RewindSaveState) {
+        if (!MelonEmulator.loadRewindState(state)) {
+            Toast.makeText(this@EmulatorActivity, "Failed to rewind", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
     /**
      * Returns a [Single] that emits the emulator's configuration taking into account permissions that have not been granted. If the provided base configuration requires the
      * use of certain permissions and [requestPermissions] is true, they will be requested to the user before returning the final configuration.
@@ -601,8 +665,9 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
         super.onPause()
         binding.surfaceMain.onPause()
 
-        if (emulatorReady && !emulatorPaused)
+        if (emulatorReady && !emulatorPaused) {
             MelonEmulator.pauseEmulation()
+        }
     }
 
     override fun onDestroy() {

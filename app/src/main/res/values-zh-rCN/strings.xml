@@ -222,4 +222,23 @@
     <string name="usrcheatfilewrong">usrcheat.dat损坏,请替换一个正确的文件</string>
     <string name="usrcheatnocheat">usrcheat金手指库中无本游戏代码</string>
     <string name="singlechosen">(单选)</string>
+    <string name="save_states_not_supported">运行固件时无法保存即时存档</string>
+    <string name="rewind_time_seconds">%1$ss</string>
+    <string name="rewind_time_minutes_seconds">%1$dm%2$ss</string>
+    <string name="rewind_not_enabled">倒带未开启</string>
+    <string name="error_invalid_directory">无效目录</string>
+    <string name="error_invalid_directory_description">无法写入选择的目录,如果你正在选择一个压缩文件,请解压后再次尝试</string>
+    <string name="rewind">倒带</string>
+    <string name="quick_slot">快速保存</string>
+    <string name="saved">已保存</string>
+    <string name="loaded">已读取</string>
+    <string name="rewind_description">开启后会定时自动保存即时存档. 当一定时间内你需要回档,只需打开\"倒带\"界面选择要回档的即时存档即可,请注意,启用此功能会消耗大量存储空间, 而且频繁保存存档可能会造成软件卡顿,请酌情设置存档频率以及保存存档的时长.</string>
+    <string name="rewind_save_period">保存频率(每隔多久保存一次)</string>
+    <string name="rewind_length">倒带总长(会保留该时间内所有的存档)</string>
+    <string name="rewind_max_memory_usage">最大容量:%1$s</string>
+    <string name="rewind_memory_usage_above_recommended_limit">存储容量超过推荐的限制</string>
+    <string name="interpolation">插值</string>
+    <string name="bitrate">比特率</string>
+    <string name="input_quick_save">快速保存</string>
+    <string name="input_quick_load">快速读取</string>
 </resources>

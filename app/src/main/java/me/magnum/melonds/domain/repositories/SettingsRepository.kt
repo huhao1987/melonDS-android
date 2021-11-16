@@ -11,9 +11,11 @@ interface SettingsRepository {
 
     fun getTheme(): Theme
     fun getFastForwardSpeedMultiplier(): Float
+    fun isRewindEnabled(): Boolean
     fun isSustainedPerformanceModeEnabled(): Boolean
 
     fun getRomSearchDirectories(): Array<Uri>
+    fun clearRomSearchDirectories()
     fun getRomIconFiltering(): RomIconFiltering
     fun getRomCacheMaxSize(): SizeUnit
 

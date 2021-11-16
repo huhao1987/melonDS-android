@@ -49,6 +49,12 @@
     <string name="cant_load_empty_slot">Can\'t load an empty save state slot</string>
     <string name="failed_reset_emulation">Failed to reset emulation</string>
 
+    <string name="save_states_not_supported">Save states are not supported while running the firmware</string>
+    <string name="rewind_time_seconds">%1$ss</string> <!-- Ex: 43.56s -->
+    <string name="rewind_time_minutes_seconds">%1$dm%2$ss</string> <!-- Ex: 2m37.93s -->
+    <string name="rewind_not_enabled">Rewind is not enabled</string>
+
+
     <string name="action_sort_alphabetically">Alphabetically</string>
     <string name="action_sort_recently_played">Recently played</string>
 
@@ -65,7 +71,8 @@
     <string name="microphone_permission_required_info">Audio recording permission is required to send microphone data to the emulator. Please grant access to storage on the next dialog.</string>
     <string name="no_rom_search_directory_specified">No ROM search directory specified</string>
     <string name="set_rom_directory">Set ROM directory</string>
-    <string name="info_no_storage_permission">Cannot load ROM without storage permission</string>
+    <string name="error_invalid_directory">Invalid directory</string>
+    <string name="error_invalid_directory_description">It\'s not possible to write to the selected directory. Please select a different one. If you are selecting a compressed file, try extracting its contents.</string>
     <string name="no_roms_found">No ROMs found</string>
 
     <string name="press_any_button">Press any button…</string>
@@ -79,8 +86,12 @@
     <string name="settings">Settings</string>
     <string name="save_state">Save state</string>
     <string name="load_state">Load state</string>
+    <string name="rewind">Rewind</string>
     <string name="save_slot">Save slot</string>
     <string name="empty_slot">%1$d. &lt;Empty&gt;</string>
+    <string name="quick_slot">Quick Slot</string>
+    <string name="saved">Saved</string>
+    <string name="loaded">Loaded</string>
     <string name="title_activity_settings">Settings</string>
     <string name="category_general">General</string>
     <string name="category_general_summary">Theme, generic settings</string>
@@ -90,6 +101,11 @@
     <string name="category_system_summary">Firmware settings, custom BIOS, JIT</string>
     <string name="theme">Theme</string>
     <string name="fast_forward_max_speed">Fast-forward max speed</string>
+    <string name="rewind_description">When enabled, a save-state is periodically saved automatically. Whenever you want to go back on your progress by a short amount of time, just open the rewind screen and select the state that you want to resume from.  Be aware that by enabling this feature, you may experience occasional stutters if your device is not powerful enough. A considerable amount of memory is also used depending on how often you want the state to be captured and for how long it should be kept.</string>
+    <string name="rewind_save_period">Save period</string>
+    <string name="rewind_length">Rewind length</string>
+    <string name="rewind_max_memory_usage">Max. memory usage: %1$s</string>
+    <string name="rewind_memory_usage_above_recommended_limit">Memory usage above recommended limit</string>
     <string name="sustained_performance_mode">Sustained performance mode</string>
     <string name="sustained_performance_mode_summary">When enabled, peak performance will be lower but thermal throttling will be less pronounced.</string>
     <string name="rom_icon_filtering">Icon filtering</string>
@@ -122,6 +138,8 @@
     <string name="category_audio">Audio</string>
     <string name="category_audio_summary">Volume, latency, microphone source</string>
     <string name="enable_sound">Enable sound</string>
+    <string name="interpolation">Interpolation</string>
+    <string name="bitrate">Bitrate</string>
     <string name="volume">Volume</string>
     <string name="volume_percentage">%1$d%%</string>
     <string name="audio_latency">Audio latency</string>
@@ -200,6 +218,8 @@
     <string name="input_dpad">DPAD</string>
     <string name="input_abxy_buttons">ABXY Buttons</string>
     <string name="input_swap_screens">Swap Screens</string>
+    <string name="input_quick_save">Quick Save</string>
+    <string name="input_quick_load">Quick Load</string>
 
     <string name="layouts">Layouts</string>
     <string name="layouts_summary">Manage custom layout configurations</string>
@@ -299,6 +319,19 @@
         <item>HQ4X</item>
         <item>Quilez</item>
         <item>LCD</item>
+    </string-array>
+
+    <string-array name="audio_interpolation_options">
+        <item>None</item>
+        <item>Linear</item>
+        <item>Cosine</item>
+        <item>Cubic</item>
+    </string-array>
+
+    <string-array name="audio_bitrate_options">
+        <item>Auto</item>
+        <item>10-bit</item>
+        <item>16-bit</item>
     </string-array>
 
     <string-array name="audio_latency_options">

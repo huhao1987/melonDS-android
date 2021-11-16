@@ -28,6 +28,9 @@ android {
         versionCode = AppConfig.versionCode
         versionName = AppConfig.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86_64"))
+        }
         externalNativeBuild {
             cmake {
                 cppFlags("-std=c++17 -Wno-write-strings")
@@ -70,6 +73,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
     }
     configurations.all {
         resolutionStrategy.eachDependency {
@@ -85,6 +89,10 @@ android {
 
 dependencies {
     val gitHubImplementation by configurations
+
+    with(Dependencies.Tools) {
+        coreLibraryDesugaring(desugarJdkLibs)
+    }
 
     with(Dependencies.Kotlin) {
         implementation(kotlinStdlib)

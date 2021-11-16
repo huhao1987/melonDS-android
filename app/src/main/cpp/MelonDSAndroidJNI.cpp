@@ -269,6 +269,79 @@ Java_me_magnum_melonds_MelonEmulator_loadStateInternal(JNIEnv* env, jobject thiz
     return MelonDSAndroid::loadState(saveStatePath);
 }
 
+JNIEXPORT jboolean JNICALL
+Java_me_magnum_melonds_MelonEmulator_loadRewindState(JNIEnv* env, jobject thiz, jobject rewindSaveState) {
+    bool result = true;
+
+    pthread_mutex_lock(&emuThreadMutex);
+    if (!stop) {
+        bool wasPaused = paused;
+        if (paused) {
+            pthread_mutex_unlock(&emuThreadMutex);
+        } else {
+            pthread_mutex_unlock(&emuThreadMutex);
+            Java_me_magnum_melonds_MelonEmulator_pauseEmulation(env, thiz);
+        }
+
+        jclass rewindSaveStateClass = env->FindClass("me/magnum/melonds/ui/emulator/rewind/model/RewindSaveState");
+        jfieldID bufferField = env->GetFieldID(rewindSaveStateClass, "buffer", "Ljava/nio/ByteBuffer;");
+        jfieldID screenshotBufferField = env->GetFieldID(rewindSaveStateClass, "screenshotBuffer", "Ljava/nio/ByteBuffer;");
+        jfieldID frameField = env->GetFieldID(rewindSaveStateClass, "frame", "I");
+        jobject buffer = env->GetObjectField(rewindSaveState, bufferField);
+        jobject screenshotBuffer = env->GetObjectField(rewindSaveState, screenshotBufferField);
+        jint frame = (int) env->GetIntField(rewindSaveState, frameField);
+
+        // Make sure that the thread is really paused to avoid data corruption
+        while (!isThreadReallyPaused);
+
+        RewindManager::RewindSaveState state = RewindManager::RewindSaveState {
+            .buffer = (u8*) env->GetDirectBufferAddress(buffer),
+            .bufferSize = (u32) env->GetDirectBufferCapacity(buffer),
+            .screenshot = (u8*) env->GetDirectBufferAddress(screenshotBuffer),
+            .screenshotSize = (u32) env->GetDirectBufferCapacity(screenshotBuffer),
+            .frame = frame
+        };
+
+        result = MelonDSAndroid::loadRewindState(state);
+
+        // Resume emulation if it was running
+        if (!wasPaused) {
+            Java_me_magnum_melonds_MelonEmulator_resumeEmulation(env, thiz);
+        }
+    } else {
+        // If the emulation is stopping, just ignore it
+        pthread_mutex_unlock(&emuThreadMutex);
+    }
+
+    return result;
+}
+
+JNIEXPORT jobject JNICALL
+Java_me_magnum_melonds_MelonEmulator_getRewindWindow(JNIEnv* env, jobject thiz) {
+    auto currentRewindWindow = MelonDSAndroid::getRewindWindow();
+
+    jclass rewindSaveStateClass = env->FindClass("me/magnum/melonds/ui/emulator/rewind/model/RewindSaveState");
+    jmethodID rewindSaveStateConstructor = env->GetMethodID(rewindSaveStateClass, "<init>", "(Ljava/nio/ByteBuffer;Ljava/nio/ByteBuffer;I)V");
+
+    jclass listClass = env->FindClass("java/util/ArrayList");
+    jmethodID listConstructor = env->GetMethodID(listClass, "<init>", "()V");
+    jmethodID listAddMethod = env->GetMethodID(listClass, "add", "(ILjava/lang/Object;)V");
+    jobject rewindStateList = env->NewObject(listClass, listConstructor);
+
+    int index = 0;
+    for (auto state : currentRewindWindow.rewindStates) {
+        jobject stateBuffer = env->NewDirectByteBuffer(state.buffer, state.bufferSize);
+        jobject stateScreenshot = env->NewDirectByteBuffer(state.screenshot, state.screenshotSize);
+        jobject rewindSaveState = env->NewObject(rewindSaveStateClass, rewindSaveStateConstructor, stateBuffer, stateScreenshot, state.frame);
+        env->CallVoidMethod(rewindStateList, listAddMethod, index++, rewindSaveState);
+    }
+
+    jclass rewindWindowClass = env->FindClass("me/magnum/melonds/ui/emulator/rewind/model/RewindWindow");
+    jmethodID rewindWindowConstructor = env->GetMethodID(rewindWindowClass, "<init>", "(ILjava/util/ArrayList;)V");
+    jobject rewindWindow = env->NewObject(rewindWindowClass, rewindWindowConstructor, currentRewindWindow.currentFrame, rewindStateList);
+    return rewindWindow;
+}
+
 JNIEXPORT void JNICALL
 Java_me_magnum_melonds_MelonEmulator_stopEmulation(JNIEnv* env, jobject thiz)
 {
@@ -346,6 +419,8 @@ MelonDSAndroid::EmulatorConfiguration buildEmulatorConfiguration(JNIEnv* env, jo
     jclass emulatorConfigurationClass = env->GetObjectClass(emulatorConfiguration);
     jclass uriClass = env->FindClass("android/net/Uri");
     jclass consoleTypeEnumClass = env->FindClass("me/magnum/melonds/domain/model/ConsoleType");
+    jclass audioBitrateEnumClass = env->FindClass("me/magnum/melonds/domain/model/AudioBitrate");
+    jclass audioInterpolationEnumClass = env->FindClass("me/magnum/melonds/domain/model/AudioInterpolation");
     jclass audioLatencyEnumClass = env->FindClass("me/magnum/melonds/domain/model/AudioLatency");
     jclass micSourceEnumClass = env->FindClass("me/magnum/melonds/domain/model/MicSource");
 
@@ -361,11 +436,18 @@ MelonDSAndroid::EmulatorConfiguration buildEmulatorConfiguration(JNIEnv* env, jo
     jobject dsiNandUri = env->GetObjectField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "dsiNandUri", "Landroid/net/Uri;"));
     jstring internalFilesDir = (jstring) env->GetObjectField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "internalDirectory", "Ljava/lang/String;"));
     jfloat fastForwardMaxSpeed = env->GetFloatField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "fastForwardSpeedMultiplier", "F"));
+    jboolean enableRewind = env->GetBooleanField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "rewindEnabled", "Z"));
+    jint rewindPeriodSeconds = env->GetIntField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "rewindPeriodSeconds", "I"));
+    jint rewindWindowSeconds = env->GetIntField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "rewindWindowSeconds", "I"));
     jboolean useJit = env->GetBooleanField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "useJit", "Z"));
     jobject consoleTypeEnum = env->GetObjectField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "consoleType", "Lme/magnum/melonds/domain/model/ConsoleType;"));
     jint consoleType = env->GetIntField(consoleTypeEnum, env->GetFieldID(consoleTypeEnumClass, "consoleType", "I"));
     jboolean soundEnabled = env->GetBooleanField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "soundEnabled", "Z"));
     jint volume = env->GetIntField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "volume", "I"));
+    jobject audioInterpolationEnum = env->GetObjectField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "audioInterpolation", "Lme/magnum/melonds/domain/model/AudioInterpolation;"));
+    jint audioInterpolation = env->GetIntField(audioInterpolationEnum, env->GetFieldID(audioInterpolationEnumClass, "interpolationValue", "I"));
+    jobject audioBitrateEnum = env->GetObjectField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "audioBitrate", "Lme/magnum/melonds/domain/model/AudioBitrate;"));
+    jint audioBitrate = env->GetIntField(audioBitrateEnum, env->GetFieldID(audioBitrateEnumClass, "bitrateValue", "I"));
     jobject audioLatencyEnum = env->GetObjectField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "audioLatency", "Lme/magnum/melonds/domain/model/AudioLatency;"));
     jint audioLatency = env->GetIntField(audioLatencyEnum, env->GetFieldID(audioLatencyEnumClass, "latencyValue", "I"));
     jobject micSourceEnum = env->GetObjectField(emulatorConfiguration, env->GetFieldID(emulatorConfigurationClass, "micSource", "Lme/magnum/melonds/domain/model/MicSource;"));
@@ -404,10 +486,15 @@ MelonDSAndroid::EmulatorConfiguration buildEmulatorConfiguration(JNIEnv* env, jo
     finalEmulatorConfiguration.consoleType = consoleType;
     finalEmulatorConfiguration.soundEnabled = soundEnabled;
     finalEmulatorConfiguration.volume = volume;
+    finalEmulatorConfiguration.audioInterpolation = audioInterpolation;
+    finalEmulatorConfiguration.audioBitrate = audioBitrate;
     finalEmulatorConfiguration.audioLatency = audioLatency;
     finalEmulatorConfiguration.micSource = micSource;
     finalEmulatorConfiguration.firmwareConfiguration = buildFirmwareConfiguration(env, firmwareConfigurationObject);
     finalEmulatorConfiguration.renderSettings = buildRenderSettings(env, rendererConfigurationObject);
+    finalEmulatorConfiguration.rewindEnabled = enableRewind ? 1 : 0;
+    finalEmulatorConfiguration.rewindCaptureSpacingSeconds = rewindPeriodSeconds;
+    finalEmulatorConfiguration.rewindLengthSeconds = rewindWindowSeconds;
     return finalEmulatorConfiguration;
 }
 
