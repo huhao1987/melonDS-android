@@ -55,7 +55,6 @@
     <string name="dsi_incorrect_bios_dir_info">DSi系统的BIOS目录错误,请确定所选目录包含以下文件:&#8226; bios7.bin &#8226; bios9.bin &#8226; firmware.bin &#8226; nand.bin</string>
     <string name="storage_permission_required">已授予存储权限</string>
     <string name="set_rom_directory">设置ROM目录</string>
-    <string name="info_no_storage_permission">必须赋予存储权限才能读取ROM</string>
     <string name="no_roms_found">找不到任何ROM</string>
     <string name="press_any_button">点击任何按钮...</string>
     <string name="storage_permission_required_info">本软件必须被赋予存储权限才能正常游戏,请给予本软件存储权限</string>
