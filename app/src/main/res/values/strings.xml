@@ -378,4 +378,8 @@
     <string name="usrcheatfilewrong">Looks like the usrcheat.dat damage, please try another one.</string>
     <string name="usrcheatnocheat">No cheats in the usrcheat.dat</string>
     <string name="singlechosen">(Single choose)</string>
+    <string name="import_battery_save">Import battery save</string>
+    <string name="imported_battery_save">Save Imported</string>
+    <string name="import_battery_save_des">Import battery save from other emulators,Only support DraStic and Desmume right now. it will process some sav file as the collect format for MelonDS. If sav file exist, it will be backup with a special name.</string>
+    <string name="import_save_dialog_content">There is a sav file exist in the game folder, do you want to override it(the old sav file will be renamed and backup)?</string>
 </resources>

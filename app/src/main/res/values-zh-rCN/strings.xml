@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">melonDS_hh</string>
     <string name="ok">确定</string>
     <string name="yes">是</string>
@@ -108,11 +108,11 @@
     <string name="volume_percentage">%1$d%%</string>
     <string name="category_save_files">保存文件</string>
     <string name="save_next_rom">保存下一个到ROM文件</string>
-    <string name="save_file_directory">保存文件目录</string>
-    <string name="save_state_location">保存即时目录</string>
+    <string name="save_file_directory">电池存档文件目录</string>
+    <string name="save_state_location">即时存档目录</string>
     <string name="input">输入</string>
     <string name="key_mapping">按键映射</string>
-    <string name="show_soft_input">显示软键盘</string>
+    <string name="show_soft_input">显示虚拟按钮</string>
     <string name="vibrate_on_touch">触摸震动</string>
     <string name="vibration_strength">震动强度</string>
     <string name="soft_input_opacity">软键盘透明度</string>
@@ -166,7 +166,7 @@
     <string name="audio_latency">声音延迟</string>
     <string name="microphone_source">麦克风音源</string>
     <string name="controller_layout">手柄布局</string>
-    <string name="category_save_files_summary">保存文件&amp;保存即时存档目录</string>
+    <string name="category_save_files_summary">电池存档&amp;即时存档目录</string>
     <string name="input_summary">键位映射,布局,触觉反馈</string>
     <string name="key_mapping_summary">将按键分配给手柄</string>
     <string name="import_cheats_summary">将金手指导入游戏,目前只支持XML金手指文件,所有之前导入的金手指都将被删除.</string>
@@ -240,4 +240,122 @@
     <string name="bitrate">比特率</string>
     <string name="input_quick_save">快速保存</string>
     <string name="input_quick_load">快速读取</string>
+
+
+    <string-array name="fast_forward_speed_multiplier_options" tools:ignore="InconsistentArrays">
+        <item>无限制</item>
+        <item>1.5x</item>
+        <item>2x</item>
+        <item>3x</item>
+        <item>4x</item>
+        <item>8x</item>
+    </string-array>
+
+    <string-array name="rom_icon_filtering_options">
+        <item>无 (像素化)</item>
+        <item>Linear (线性流畅)</item>
+    </string-array>
+
+    <string-array name="game_runtime_console_type_options">
+        <item>默认</item>
+        <item>@string/console_ds</item>
+        <item>@string/console_dsi</item>
+    </string-array>
+
+    <string-array name="firmware_settings_language_options">
+        <item>英文</item>
+        <item>法语</item>
+        <item>德语</item>
+        <item>意大利语</item>
+        <item>西班牙语</item>
+        <item>日语</item>
+    </string-array>
+
+    <string-array name="game_runtime_mic_source_options">
+        <item>默认</item>
+        <item>无</item>
+        <item>吹气</item>
+        <item>系统麦克风</item>
+    </string-array>
+
+    <string-array name="console_type_options">
+        <item>@string/console_ds</item>
+        <item>@string/console_dsi</item>
+    </string-array>
+
+    <string-array name="fps_counter_position_options">
+        <item>隐藏</item>
+        <item>左上</item>
+        <item>顶部居中</item>
+        <item>右上</item>
+        <item>左下</item>
+        <item>底部居中</item>
+        <item>右下</item>
+    </string-array>
+
+    <string-array name="video_filtering_options">
+        <item>无</item>
+        <item>Linear</item>
+        <item>2xBR</item>
+        <item>HQ2X</item>
+        <item>HQ4X</item>
+        <item>Quilez</item>
+        <item>LCD</item>
+    </string-array>
+
+    <string-array name="audio_interpolation_options">
+        <item>无</item>
+        <item>Linear</item>
+        <item>Cosine</item>
+        <item>Cubic</item>
+    </string-array>
+
+    <string-array name="audio_bitrate_options">
+        <item>自动</item>
+        <item>10-bit</item>
+        <item>16-bit</item>
+    </string-array>
+
+    <string-array name="audio_latency_options">
+        <item>低 (较慢)</item>
+        <item>中</item>
+        <item>高 (较快)</item>
+    </string-array>
+
+    <string-array name="mic_source_options">
+        <item>无</item>
+        <item>吹气</item>
+        <item>系统麦克风</item>
+    </string-array>
+
+    <string-array name="save_state_locations">
+        <item>存档文件目录</item>
+        <item>ROM目录</item>
+        <item>内部目录</item>
+    </string-array>
+
+    <string-array name="layout_orientation_options">
+        <item>跟随系统</item>
+        <item>竖向</item>
+        <item>横向</item>
+    </string-array>
+
+    <string-array name="background_portrait_mode_options">
+        <item>Stretch</item>
+        <item>Fit center</item>
+        <item>Fit top</item>
+        <item>Fit bottom</item>
+    </string-array>
+
+    <string-array name="background_landscape_mode_options">
+        <item>拉伸</item>
+        <item>置中对齐</item>
+        <item>靠左</item>
+        <item>靠右</item>
+    </string-array>
+
+    <string name="import_battery_save">导入游戏电池存档</string>
+    <string name="imported_battery_save">存档导入成功</string>
+    <string name="import_battery_save_des">从其他模拟器导入存档文件,目前只支持DraStic和Desmume的格式转换. 如果目录下已存在存档文件,老存档会被备份保存.</string>
+    <string name="import_save_dialog_content">游戏目录下已存在一个存档文件,你确定要覆盖它吗(老的存档文件会被重命名并保存在目录中)?</string>
 </resources>

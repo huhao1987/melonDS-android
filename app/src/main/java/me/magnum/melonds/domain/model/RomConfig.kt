@@ -9,7 +9,8 @@ data class RomConfig(
         var layoutId: UUID? = null,
         var loadGbaCart: Boolean = false,
         var gbaCartPath: Uri? = null,
-        var gbaSavePath: Uri? = null
+        var gbaSavePath: Uri? = null,
+        var ndsImportSavePath:Uri?=null
 ) {
     fun mustLoadGbaCart() = loadGbaCart && gbaCartPath != null
 }

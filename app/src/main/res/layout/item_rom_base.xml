@@ -24,16 +24,16 @@
             tools:text="Pokémon Pearl" />
 
     <TextView
-            android:id="@+id/textRomPath"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/imageRomIcon"
-            android:layout_below="@id/textRomName"
-            android:layout_alignBottom="@id/imageRomIcon"
-            android:layout_alignParentEnd="true"
-            android:gravity="bottom"
-            android:singleLine="true"
-            android:ellipsize="start"
-            android:textColor="?android:attr/textColorSecondary"
-            tools:text="/sdcard/Roms/DS/Pearl.nds" />
+        android:id="@+id/textRomPath"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/imageRomIcon"
+        android:layout_below="@id/textRomName"
+        android:layout_alignBottom="@id/imageRomIcon"
+        android:layout_alignParentEnd="true"
+        android:gravity="bottom"
+        android:singleLine="true"
+        android:ellipsize="start"
+        android:textColor="?android:attr/textColorSecondary"
+        tools:text="/sdcard/Roms/DS/Pearl.nds" />
 </merge>

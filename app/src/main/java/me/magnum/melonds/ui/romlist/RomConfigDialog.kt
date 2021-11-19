@@ -9,7 +9,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
+import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import io.reactivex.disposables.Disposable
@@ -25,8 +27,10 @@ import me.magnum.melonds.parcelables.RomConfigParcelable
 import me.magnum.melonds.parcelables.RomParcelable
 import me.magnum.melonds.ui.layouts.LayoutSelectorActivity
 import me.magnum.melonds.common.contracts.FilePickerContract
+import me.magnum.melonds.di.AppModule
 import me.magnum.melonds.utils.FileUtils
 import me.magnum.melonds.extensions.isMicrophonePermissionGranted
+import me.magnum.melonds.hhutils.ImportSaveUtil
 import java.util.*
 
 class RomConfigDialog : DialogFragment() {
@@ -74,7 +78,11 @@ class RomConfigDialog : DialogFragment() {
             onRuntimeMicSourceSelected(RuntimeMicSource.DEVICE)
         }
     }
-
+    private val NdsSaveFilePicker = registerForActivityResult(FilePickerContract(Permission.READ_WRITE)) {
+        if (it != null) {
+            onNdsSaveSelected(it)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -168,6 +176,10 @@ class RomConfigDialog : DialogFragment() {
             dismiss()
         }
         binding.buttonRomConfigCancel.setOnClickListener { dismiss() }
+
+        binding.layoutimportsavepath.setOnClickListener {
+           NdsSaveFilePicker.launch(Pair(romConfig.ndsImportSavePath,null))
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -213,6 +225,12 @@ class RomConfigDialog : DialogFragment() {
 
     private fun getUriPathOrDefault(uri: Uri?): String {
         return FileUtils.getAbsolutePathFromSAFUri(requireContext(), uri) ?: getString(R.string.not_set)
+    }
+
+    private fun onNdsSaveSelected(importSaveUri: Uri) {
+        romConfig.ndsImportSavePath = importSaveUri
+//        binding.textPrefImportsave.text=requireContext().getString(R.string.import_battery_save_des)
+        ImportSaveUtil().init(requireContext(),importSaveUri,rom)
     }
 
     override fun onStop() {
