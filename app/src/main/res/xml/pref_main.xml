@@ -48,4 +48,9 @@
             android:summary="@string/cheats_summary"
             app:icon="@drawable/ic_cheat"
             android:fragment="me.magnum.melonds.ui.settings.fragments.CheatsPreferencesFragment" />
+    <Preference
+        android:title="@string/autosavetitle"
+        android:summary="@string/autosavecotent"
+        app:icon="@drawable/ic_cheat"
+        android:fragment="me.magnum.melonds.ui.settings.fragments.AutoSavesettingFragment" />
 </PreferenceScreen>

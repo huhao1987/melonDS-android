@@ -86,14 +86,17 @@ class SaveStateListAdapter(
         if (item.exists) {
             view.textDate.isGone = false
             view.textTime.isGone = false
-            view.textSlot.text = parent.context.getString(R.string.save_state_slot, item.slot)
+            view.textSlot.text = parent.context.getString(R.string.save_state_slot, item.slot.toString())
             view.textDate.text = dateFormat.format(item.lastUsedDate!!)
             view.textTime.text = timeFormat.format(item.lastUsedDate)
         } else {
             view.textDate.isGone = true
             view.textTime.isGone = true
-            view.textSlot.text = parent.context.getString(R.string.empty_slot, item.slot)
+            view.textSlot.text = parent.context.getString(R.string.empty_slot, item.slot.toString())
         }
+
+        if(item.slot==9)
+            view.textSlot.text = parent.context.getString(R.string.save_state_slot, parent.context.getString(R.string.autosavetitle))
 
         view.root.setOnClickListener {
             onSlotSelected(item)

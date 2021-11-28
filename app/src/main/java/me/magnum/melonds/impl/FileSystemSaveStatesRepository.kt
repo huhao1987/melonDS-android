@@ -22,10 +22,10 @@ class FileSystemSaveStatesRepository(
         val saveStateDirectoryDocument = getSaveStateDirectoryDocument(rom) ?: return emptyList()
         val romFileName = getRomFileNameWithoutExtension(rom) ?: return emptyList()
 
-        val saveStateSlots = Array(9) {
+        val saveStateSlots = Array(10) {
             SaveStateSlot(it, false, null, null)
         }
-        val fileNameRegex = "${Regex.escape(romFileName)}\\.ml[0-8]".toRegex()
+        val fileNameRegex = "${Regex.escape(romFileName)}\\.ml[0-9]".toRegex()
         saveStateDirectoryDocument.listFiles().forEach {
             val fileName = it.name
             if (fileName?.matches(fileNameRegex) == true) {
@@ -83,6 +83,14 @@ class FileSystemSaveStatesRepository(
         saveStateScreenshotProvider.deleteRomSaveStateScreenshot(rom, saveState)
     }
 
+    override fun getRomAutoSaveStateSlot(rom: Rom): SaveStateSlot {
+        val autoSaveStateDocument = getRomAutoSaveStateDocument(rom)
+        val saveStateExists = autoSaveStateDocument != null
+        val lastModified = autoSaveStateDocument?.let { Date(it.lastModified()) }
+        val slot = SaveStateSlot(SaveStateSlot.AUTO_SAVE_SLOT, saveStateExists, lastModified, null)
+        val screenshotUri = saveStateScreenshotProvider.getRomSaveStateScreenshotUri(rom, slot)
+        return slot.copy(screenshot = screenshotUri)    }
+
     private fun getRomQuickSaveStateDocument(rom: Rom): DocumentFile? {
         val saveStateDirectoryDocument = getSaveStateDirectoryDocument(rom) ?: return null
         val romFileName = getRomFileNameWithoutExtension(rom) ?: return null
@@ -91,6 +99,13 @@ class FileSystemSaveStatesRepository(
         return saveStateDirectoryDocument.findFile(quickSaveStateFileName)
     }
 
+    private fun getRomAutoSaveStateDocument(rom: Rom): DocumentFile? {
+        val saveStateDirectoryDocument = getSaveStateDirectoryDocument(rom) ?: return null
+        val romFileName = getRomFileNameWithoutExtension(rom) ?: return null
+
+        val autoSaveStateFileName = "$romFileName.ml9"
+        return saveStateDirectoryDocument.findFile(autoSaveStateFileName)
+    }
     private fun getSaveStateDirectoryDocument(rom: Rom): DocumentFile? {
         val saveStateDirectoryUri = settingsRepository.getSaveStateDirectory(rom) ?: return null
         return uriHandler.getUriTreeDocument(saveStateDirectoryUri)

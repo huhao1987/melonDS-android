@@ -60,6 +60,14 @@ class FirmwareEmulatorDelegate(activity: EmulatorActivity) : EmulatorDelegate(ac
         }
     }
 
+    override fun autoSave() {
+        showSaveStatesNotSupportedToast()
+    }
+
+    override fun autoLoad() {
+        showSaveStatesNotSupportedToast()
+    }
+
     override fun performQuickSave() {
         showSaveStatesNotSupportedToast()
     }

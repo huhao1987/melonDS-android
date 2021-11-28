@@ -258,7 +258,11 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
                     .show()
         }
     }
-
+    override fun onStop() {
+        super.onStop()
+        MelonEmulator.pauseEmulation()
+        delegate.autoSave()
+    }
     override fun onResume() {
         super.onResume()
         binding.surfaceMain.onResume()
@@ -292,6 +296,7 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
                         binding.viewLayoutControls.isVisible = true
                         dsRenderer.canRenderBackground = true
                         emulatorReady = true
+                        delegate.autoLoad()
                     } catch (e: Exception) {
                         showLaunchFailDialog(e)
                     }

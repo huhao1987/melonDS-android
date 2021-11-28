@@ -88,6 +88,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     val gitHubImplementation by configurations
 
     with(Dependencies.Tools) {

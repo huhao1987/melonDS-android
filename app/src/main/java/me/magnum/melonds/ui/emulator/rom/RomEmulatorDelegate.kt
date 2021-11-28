@@ -168,6 +168,23 @@ class RomEmulatorDelegate(activity: EmulatorActivity, private val picasso: Picas
         }
     }
 
+    override fun autoSave() {
+        MelonEmulator.pauseEmulation()
+        val autoSlot = activity.viewModel.getRomAutoSaveStateSlot(loadedRom)
+        if (saveState(autoSlot)) {
+        }
+        MelonEmulator.resumeEmulation()
+    }
+
+    override fun autoLoad() {
+        MelonEmulator.pauseEmulation()
+        val quickSlot = activity.viewModel.getRomAutoSaveStateSlot(loadedRom)
+        if (loadState(quickSlot)) {
+            Toast.makeText(activity, R.string.loaded, Toast.LENGTH_SHORT).show()
+        }
+        MelonEmulator.resumeEmulation()
+    }
+
     override fun performQuickSave() {
         MelonEmulator.pauseEmulation()
         val quickSlot = activity.viewModel.getRomQuickSaveStateSlot(loadedRom)
@@ -185,6 +202,7 @@ class RomEmulatorDelegate(activity: EmulatorActivity, private val picasso: Picas
         }
         MelonEmulator.resumeEmulation()
     }
+
     override fun getCrashContext(): Any {
         val sramUri = try {
             activity.viewModel.getRomSramFile(loadedRom)

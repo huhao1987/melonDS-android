@@ -43,7 +43,7 @@
 
     <string name="info_fps">FPS: %1$d</string>
     <string name="info_loading">LOADING…</string>
-    <string name="save_state_slot">%1$d.</string>
+    <string name="save_state_slot">%1$s</string>
     <string name="failed_save_state">Failed to save state</string>
     <string name="failed_load_state">Failed to load state</string>
     <string name="cant_load_empty_slot">Can\'t load an empty save state slot</string>
@@ -88,7 +88,7 @@
     <string name="load_state">Load state</string>
     <string name="rewind">Rewind</string>
     <string name="save_slot">Save slot</string>
-    <string name="empty_slot">%1$d. &lt;Empty&gt;</string>
+    <string name="empty_slot">%1$s. &lt;Empty&gt;</string>
     <string name="quick_slot">Quick Slot</string>
     <string name="saved">Saved</string>
     <string name="loaded">Loaded</string>
@@ -382,4 +382,8 @@
     <string name="imported_battery_save">Save Imported</string>
     <string name="import_battery_save_des">Import battery save from other emulators,Only support DraStic and Desmume right now. it will process some sav file as the collect format for MelonDS. If sav file exist, it will be backup with a special name.</string>
     <string name="import_save_dialog_content">There is a sav file exist in the game folder, do you want to override it(the old sav file will be renamed and backup)?</string>
+    <string name="autosavetitle">Auto save</string>
+    <string name="autosavecotent">Setting of auto save</string>
+    <string name="enableautosave">Enable auto save</string>
+
 </resources>

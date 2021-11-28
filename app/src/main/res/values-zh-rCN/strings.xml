@@ -39,7 +39,7 @@
     <string name="update_download_failed">下载更新错误</string>
     <string name="info_fps">FPS: %1$d</string>
     <string name="info_loading">读取中...</string>
-    <string name="save_state_slot">%1$d.</string>
+    <string name="save_state_slot">%1$s</string>
     <string name="failed_save_state">保存即时存档失败</string>
     <string name="failed_load_state">读取即时存档失败</string>
     <string name="cant_load_empty_slot">无法读取一个空的即时存档</string>
@@ -69,7 +69,7 @@
     <string name="save_state">保存即时存档</string>
     <string name="load_state">读取即时存档</string>
     <string name="save_slot">保存位置</string>
-    <string name="empty_slot">%1$d. &lt;空存档&gt;</string>
+    <string name="empty_slot">%1$s. &lt;空存档&gt;</string>
     <string name="title_activity_settings">设置</string>
     <string name="category_general">一般</string>
     <string name="category_general_summary">"主题,通用设置 "</string>
@@ -358,4 +358,7 @@
     <string name="imported_battery_save">存档导入成功</string>
     <string name="import_battery_save_des">从其他模拟器导入存档文件,目前只支持DraStic和Desmume的格式转换. 如果目录下已存在存档文件,老存档会被备份保存.</string>
     <string name="import_save_dialog_content">游戏目录下已存在一个存档文件,你确定要覆盖它吗(老的存档文件会被重命名并保存在目录中)?</string>
+    <string name="autosavetitle">自动保存</string>
+    <string name="autosavecotent">自动保存设置</string>
+    <string name="enableautosave">开启自动保存</string>
 </resources>

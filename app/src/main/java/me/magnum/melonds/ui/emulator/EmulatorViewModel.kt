@@ -189,6 +189,10 @@ class EmulatorViewModel @Inject constructor(
         return saveStatesRepository.getRomQuickSaveStateSlot(rom)
     }
 
+    fun getRomAutoSaveStateSlot(rom: Rom): SaveStateSlot {
+        return saveStatesRepository.getRomAutoSaveStateSlot(rom)
+    }
+
     fun getRomSaveStateSlotUri(rom: Rom, saveState: SaveStateSlot): Uri {
         return saveStatesRepository.getRomSaveStateUri(rom, saveState)
     }

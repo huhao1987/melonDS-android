@@ -10,6 +10,8 @@ abstract class EmulatorDelegate(protected val activity: EmulatorActivity) {
 
     abstract fun getPauseMenuOptions(): List<PauseMenuOption>
     abstract fun onPauseMenuOptionSelected(option: PauseMenuOption)
+    abstract fun autoSave()
+    abstract fun autoLoad()
     abstract fun performQuickSave()
     abstract fun performQuickLoad()
     abstract fun getCrashContext(): Any
