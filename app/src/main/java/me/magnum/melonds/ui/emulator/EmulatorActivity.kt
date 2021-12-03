@@ -7,6 +7,7 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.Window
@@ -258,15 +259,10 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
                     .show()
         }
     }
-    override fun onStop() {
-        super.onStop()
-        MelonEmulator.pauseEmulation()
-        delegate.autoSave()
-    }
+
     override fun onResume() {
         super.onResume()
         binding.surfaceMain.onResume()
-
         if (emulatorReady && !emulatorPaused) {
             MelonEmulator.resumeEmulation()
         }
@@ -296,6 +292,7 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
                         binding.viewLayoutControls.isVisible = true
                         dsRenderer.canRenderBackground = true
                         emulatorReady = true
+                        if(settingsRepository.isAutosaveEnabled())
                         delegate.autoLoad()
                     } catch (e: Exception) {
                         showLaunchFailDialog(e)
@@ -669,7 +666,8 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
     override fun onPause() {
         super.onPause()
         binding.surfaceMain.onPause()
-
+        if(settingsRepository.isAutosaveEnabled())
+            delegate.autoSave()
         if (emulatorReady && !emulatorPaused) {
             MelonEmulator.pauseEmulation()
         }

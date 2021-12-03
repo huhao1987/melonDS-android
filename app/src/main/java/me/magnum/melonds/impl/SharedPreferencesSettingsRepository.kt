@@ -432,6 +432,11 @@ class SharedPreferencesSettingsRepository(
         }
     }
 
+    override fun isAutosaveEnabled(): Boolean {
+        return preferences.getBoolean("auto_save_enabled", true)
+
+    }
+
     override fun observeTheme(): Observable<Theme> {
         return getOrCreatePreferenceObservable("theme") {
             getTheme()
