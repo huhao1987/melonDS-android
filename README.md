@@ -2,17 +2,18 @@
  This is a version which is forked from https://github.com/rafaelvcaetano/melonDS-android, but add some special features.
  ## Update:
  
- 1.0.4
+ ## 1.0.4
  Add auto save
  An auto save will be stored in a new save slot, and it will be automatic loaded when a game is loaded.
  
- 1.0.3
+ ## 1.0.3
  Add save import function
  You can import save file from other emulators now(from Drastic or Desmume).
- 1.0.2
+ 
+ ## 1.0.2
  Merge from original project
  
- 1.0.1
+ ## 1.0.1
  * Add Chinese translation
  * Support usrcheat.dat cheat system
  * * Usage:
