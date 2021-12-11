@@ -161,7 +161,7 @@
     <string name="threaded_rendering">线程渲染</string>
     <string name="fps_counter_position">FPS计数器显示位置</string>
     <string name="threaded_rendering_summary">提升3D游戏性能,但可能导致图形故障和贴图错误</string>
-    <string name="category_video_summary">滤镜,县城渲染,FPS计数器</string>
+    <string name="category_video_summary">滤镜,线程渲染,FPS计数器</string>
     <string name="category_audio_summary">音量,延迟,麦克风音源</string>
     <string name="audio_latency">声音延迟</string>
     <string name="microphone_source">麦克风音源</string>
