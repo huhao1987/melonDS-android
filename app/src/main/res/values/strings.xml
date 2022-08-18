@@ -385,5 +385,7 @@
     <string name="autosavetitle">Auto save</string>
     <string name="autosavecotent">Setting of auto save</string>
     <string name="enableautosave">Enable auto save</string>
+    <string name="autosaveloadtitle">You have a auto save</string>
+    <string name="autosaveloadcontent">Do you want to load the auto save?</string>
 
 </resources>

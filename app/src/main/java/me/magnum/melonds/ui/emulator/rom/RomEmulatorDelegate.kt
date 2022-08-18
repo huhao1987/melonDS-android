@@ -179,10 +179,25 @@ class RomEmulatorDelegate(activity: EmulatorActivity, private val picasso: Picas
     override fun autoLoad() {
         MelonEmulator.pauseEmulation()
         val autoSlot = activity.viewModel.getRomAutoSaveStateSlot(loadedRom)
-        if (loadState(autoSlot)) {
-            Toast.makeText(activity, R.string.loaded, Toast.LENGTH_SHORT).show()
+        if (isAutoState(autoSlot)) {
+            AlertDialog.Builder(activity)
+                .setTitle(R.string.autosaveloadtitle)
+                .setMessage(R.string.autosaveloadcontent)
+                .setPositiveButton(R.string.ok) { dialog, _ ->
+                    loadState(autoSlot)
+                    MelonEmulator.resumeEmulation()
+                    Toast.makeText(activity, R.string.loaded, Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ ->
+                    activity.resetEmulation()
+                    dialog.dismiss()
+                }
+                .setCancelable(true)
+                .show()
         }
-        MelonEmulator.resumeEmulation()
+        else
+            MelonEmulator.resumeEmulation()
     }
 
     override fun performQuickSave() {
@@ -227,6 +242,7 @@ class RomEmulatorDelegate(activity: EmulatorActivity, private val picasso: Picas
         }
     }
 
+    private fun isAutoState(slot: SaveStateSlot)=if(slot.exists&&slot.slot==9)true else false
     private fun loadState(slot: SaveStateSlot): Boolean {
         return if (!slot.exists) {
             if(slot.slot!=9)

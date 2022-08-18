@@ -361,4 +361,6 @@
     <string name="autosavetitle">自动保存</string>
     <string name="autosavecotent">自动保存设置</string>
     <string name="enableautosave">开启自动保存</string>
+    <string name="autosaveloadtitle">本游戏有一个自动存档</string>
+    <string name="autosaveloadcontent">你想读取自动存档吗?</string>
 </resources>
