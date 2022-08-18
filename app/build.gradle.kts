@@ -156,9 +156,9 @@ dependencies {
         testImplementation(junit)
     }
     implementation(project(":usrcheat_android"))
-    implementation("com.blankj:utilcodex:1.30.6")
+    implementation("com.blankj:utilcodex:1.31.0")
     implementation ("com.google.code.gson:gson:2.8.8")
-
+    implementation ("androidx.navigation:navigation-compose:2.5.1")
 }
 
 repositories {

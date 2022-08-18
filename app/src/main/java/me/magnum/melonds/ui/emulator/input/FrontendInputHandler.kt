@@ -13,7 +13,7 @@ abstract class FrontendInputHandler : IInputListener {
             Input.SWAP_SCREENS -> onSwapScreens()
             Input.QUICK_SAVE -> onQuickSave()
             Input.QUICK_LOAD -> onQuickLoad()
-
+            else->{}
         }
     }
 

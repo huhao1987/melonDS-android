@@ -184,7 +184,7 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEmulatorBinding.inflate(layoutInflater)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
+//        requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(binding.root)
         setupFullscreen()
         initializeDelegate()
@@ -358,6 +358,9 @@ class EmulatorActivity : AppCompatActivity(), RendererListener {
                 FpsCounterPosition.BOTTOM_RIGHT -> {
                     newParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
                     newParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID
+                }
+                else->{
+
                 }
             }
             binding.textFps.layoutParams = newParams

@@ -39,6 +39,7 @@
         <activity
             android:name=".ui.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:exported="false"
             android:parentActivityName=".ui.romlist.RomListActivity"
             android:launchMode="singleTop">
             <meta-data
@@ -84,14 +85,17 @@
         <activity
             android:name=".ui.layouteditor.LayoutEditorActivity"
             android:theme="@style/EmulatorTheme"
+            android:exported="false"
             android:label="@string/layout_editor">
         </activity>
         <activity
             android:name=".ui.backgrounds.BackgroundsActivity"
+            android:exported="false"
             android:label="@string/backgrounds">
         </activity>
         <activity
             android:name=".ui.backgroundpreview.BackgroundPreviewActivity"
+            android:exported="false"
             android:theme="@style/FullScreenTheme">
         </activity>
 

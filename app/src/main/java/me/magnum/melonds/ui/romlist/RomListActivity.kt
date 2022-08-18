@@ -87,7 +87,7 @@ class RomListActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (menu == null)
             return super.onCreateOptionsMenu(menu)
 
